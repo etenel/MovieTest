@@ -6,98 +6,49 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.eternel.wlsmv.R;
-import com.eternel.wlsmv.di.component.DaggerImageComponent;
-import com.eternel.wlsmv.di.module.ImageModule;
-import com.eternel.wlsmv.mvp.contract.ImageContract;
-import com.eternel.wlsmv.mvp.presenter.ImagePresenter;
-import com.eternel.wlsmv.mvp.ui.adapter.ImageListAdapter;
-import com.eternel.wlsmv.mvp.ui.widget.GridDecoration;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
-import com.paginate.Paginate;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import javax.inject.Inject;
+import com.eternel.wlsmv.di.component.DaggerTagImageComponent;
+import com.eternel.wlsmv.di.module.TagImageModule;
+import com.eternel.wlsmv.mvp.contract.TagImageContract;
+import com.eternel.wlsmv.mvp.presenter.TagImagePresenter;
 
-import butterknife.BindView;
+import com.eternel.wlsmv.R;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
-public class ImageFragment extends BaseFragment<ImagePresenter> implements ImageContract.View {
+public class TagImageFragment extends BaseFragment<TagImagePresenter> implements TagImageContract.View {
 
-    @BindView(R.id.image_list)
-    RecyclerView imageList;
-    @BindView(R.id.refresh)
-    SmartRefreshLayout refresh;
-    @Inject
-    ImageListAdapter imageListAdapter;
-
-    public static ImageFragment newInstance() {
-        ImageFragment fragment = new ImageFragment();
+    public static TagImageFragment newInstance() {
+        TagImageFragment fragment = new TagImageFragment();
         return fragment;
     }
 
     @Override
     public void setupFragmentComponent(@NonNull AppComponent appComponent) {
-        DaggerImageComponent //如找不到该类,请编译一下项目
+        DaggerTagImageComponent //如找不到该类,请编译一下项目
                 .builder()
                 .appComponent(appComponent)
-                .imageModule(new ImageModule(this))
+                .tagImageModule(new TagImageModule(this))
                 .build()
                 .inject(this);
     }
 
     @Override
     public View initView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_image, container, false);
+        return inflater.inflate(R.layout.fragment_tag_image, container, false);
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        imageList.setAdapter(imageListAdapter);
-        imageList.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
-        imageList.addItemDecoration(new GridDecoration(getContext(), 8, getResources().getColor(R.color.transparent)) {
-            @Override
-            public boolean[] getItemSidesIsHaveOffsets(int itemPosition) {
-                boolean[] booleans = {false, false, false, false};
-                //left, top, right, bottom
-                switch (itemPosition % 2) {
-                    case 0:
-                        booleans[0] = true;
-                        booleans[1] = true;
-                        booleans[2]=true;
-                        break;
-                    case 1:
 
-                        booleans[2] = true;
-                        booleans[1] = true;
-                        break;
-                }
-                return booleans;
-            }
-        });
-        refresh.setEnableRefresh(false);
-        refresh.setOnLoadMoreListener(refreshLayout -> {
-            mPresenter.getTags(false);
-        });
-        imageListAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
-        mPresenter.getTags(true);
-        mPresenter.initListener();
     }
 
     /**
@@ -148,7 +99,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
 
     @Override
     public void hideLoading() {
-        refresh.finishRefresh();
+
     }
 
     @Override
@@ -166,16 +117,5 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
     @Override
     public void killMyself() {
 
-    }
-
-
-    @Override
-    public void startLoadMore() {
-
-    }
-
-    @Override
-    public void endLoadMore() {
-        refresh.finishLoadMore();
     }
 }

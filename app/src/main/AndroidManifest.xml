@@ -14,7 +14,7 @@
     <application
         android:name="com.jess.arms.base.BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/arms_log"
+        android:icon="@mipmap/icon_image_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -42,7 +42,7 @@
             android:name="com.eternel.wlsmv.app.GlobalConfiguration"
             android:value="ConfigModule" />
 
-        <activity android:name=".mvp.ui.activity.UserActivity" />
+        <activity android:name=".mvp.ui.activity.TagDetailActivity"></activity>
     </application>
 
 </manifest>

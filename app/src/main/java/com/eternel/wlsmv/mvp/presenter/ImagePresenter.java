@@ -7,9 +7,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.app.utils.RxUtils;
 import com.eternel.wlsmv.mvp.model.entity.ImageEntity;
+import com.eternel.wlsmv.mvp.model.entity.ImageTagsEntity;
+import com.eternel.wlsmv.mvp.ui.activity.TagDetailActivity;
 import com.eternel.wlsmv.mvp.ui.adapter.ImageListAdapter;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.ActivityScope;
@@ -18,6 +23,7 @@ import com.jess.arms.http.imageloader.ImageLoader;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
@@ -25,11 +31,13 @@ import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 import javax.inject.Inject;
 
 import com.eternel.wlsmv.mvp.contract.ImageContract;
+import com.jess.arms.utils.ArmsUtils;
 import com.jess.arms.utils.RxLifecycleUtils;
 
 import java.util.List;
 
 import static com.jess.arms.utils.ArmsUtils.startActivity;
+import static com.jess.arms.utils.ArmsUtils.statuInScreen;
 
 
 @ActivityScope
@@ -46,10 +54,8 @@ public class ImagePresenter extends BasePresenter<ImageContract.Model, ImageCont
     ImageListAdapter imageListAdapter;
     @Inject
     List<ImageEntity.FeedListBean> images;
-    private int post_id;
-    private boolean isFirst = true;
-    private int pager = 1;
-    private String type;
+    private int page = 1;
+    private int count = 20;
 
     @Inject
     public ImagePresenter(ImageContract.Model model, ImageContract.View rootView) {
@@ -71,84 +77,42 @@ public class ImagePresenter extends BasePresenter<ImageContract.Model, ImageCont
         imageListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageListAdapter.getItem(position).getUrl()));
-                startActivity(intent);
-            }
-        });
-        imageListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageListAdapter.getItem(position).getUrl()));
-                startActivity(intent);
             }
         });
     }
 
-    ;
-
-    public void getImages(boolean refresh) {
+    public void getTags(boolean refresh) {
         if (refresh) {
-            pager = 1;
-            type = "refresh";
+            page = 1;
         } else {
-            pager=pager+1;
-            type = "loadmore";
+            page++;
         }
+        String tag = SPUtils.getInstance(mApplication.getString(R.string.tags)).getString(mApplication.getString(R.string.tag), "subject");
+        mModel.getTags(tag, page, count)
+                .subscribeOn(Schedulers.io())
+                .doFinally(() -> {
+                    if (refresh) {
+                        mRootView.hideLoading();
+                    } else {
+                        mRootView.endLoadMore();
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(imageTagsEntity -> {
+                    if ("SUCCESS".equals(imageTagsEntity.getResult())) {
+                        ImageTagsEntity.DataBean data = imageTagsEntity.getData();
+                        List<ImageTagsEntity.DataBean.TagListBean> tag_list = data.getTag_list();
+                        if (refresh) {
+                            imageListAdapter.setNewData(tag_list);
+                        } else {
+                            imageListAdapter.addData(tag_list);
+                        }
+                    } else {
+                        ToastUtils.showShort(imageTagsEntity.getResult() + imageTagsEntity.getMessage());
+                    }
 
-        boolean isEvictCache = refresh;//是否驱逐缓存,为ture即不使用缓存,每次下拉刷新即需要最新数据,则不使用缓存
-        if (refresh && isFirst) {//默认在第一次下拉刷新时使用缓存
-            isFirst = false;
-            isEvictCache = false;
-        }
-        if (refresh) {
-            mModel.getImages(pager, isEvictCache, type)
-                    .subscribeOn(Schedulers.io())
-                    .doOnSubscribe(disposable -> {
-                        mRootView.showLoading();
-                    })
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doFinally(new Action() {
-                        @Override
-                        public void run() throws Exception {
-                            mRootView.hideLoading();
-                        }
-                    }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                    .subscribe(new ErrorHandleSubscriber<ImageEntity>(mErrorHandler) {
-                        @Override
-                        public void onNext(ImageEntity imageEntity) {
-                            images = imageEntity.getFeedList();
-                            if (images.size() > 0) {
-                                post_id = images.get(images.size() - 1).getPost_id();//记录最后一个id,用于下一次请求
-                            }
-                            imageListAdapter.setNewData(images);
-                        }
-                    });
-        } else {
-            mModel.getMoreImages(pager, true, type, post_id)
-                    .subscribeOn(Schedulers.io())
-                    .doOnSubscribe(disposable -> {
-                        mRootView.startLoadMore();
-                    })
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doFinally(new Action() {
-                        @Override
-                        public void run() throws Exception {
-                            mRootView.endLoadMore();
-                        }
-                    }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                    .subscribe(new ErrorHandleSubscriber<ImageEntity>(mErrorHandler) {
-                        @Override
-                        public void onNext(ImageEntity imageEntity) {
-                            images = imageEntity.getFeedList();
-                            if (images.size() > 0) {
-                                post_id = images.get(images.size() - 1).getPost_id();//记录最后一个id,用于下一次请求
-                            }
-                            imageListAdapter.addData(images);
-                        }
-                    });
-        }
+                });
+
 
     }
 }

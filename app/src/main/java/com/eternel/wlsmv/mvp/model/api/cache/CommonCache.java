@@ -38,9 +38,9 @@ import com.eternel.wlsmv.mvp.model.entity.ImageEntity;
  */
 public interface CommonCache {
 
-    @LifeCache(duration = 2, timeUnit = TimeUnit.MINUTES)
+    @LifeCache(duration = 2, timeUnit = TimeUnit.SECONDS)
     Observable<Reply<ImageEntity>> getUsers(Observable<ImageEntity> users, DynamicKey idLastUserQueried, EvictProvider evictProvider);
 
-    @LifeCache(duration = 2, timeUnit = TimeUnit.MINUTES)
+    @LifeCache(duration = 2, timeUnit = TimeUnit.SECONDS)
     Observable<Reply<ImageEntity>> getCacheImages(Observable<ImageEntity> images, DynamicKey dynamicKey, EvictDynamicKey evictDynamicKey);
 }
