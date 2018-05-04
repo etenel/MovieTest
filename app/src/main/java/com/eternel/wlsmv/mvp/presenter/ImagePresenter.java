@@ -73,21 +73,13 @@ public class ImagePresenter extends BasePresenter<ImageContract.Model, ImageCont
         this.imageListAdapter = null;
     }
 
-    public void initListener() {
-        imageListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            }
-        });
-    }
-
     public void getTags(boolean refresh) {
         if (refresh) {
             page = 1;
         } else {
             page++;
         }
-        String tag = SPUtils.getInstance(mApplication.getString(R.string.tags)).getString(mApplication.getString(R.string.tag), "subject");
+        String tag = SPUtils.getInstance(mApplication.getString(R.string.tags)).getString(mApplication.getString(R.string.tags), "subject");
         mModel.getTags(tag, page, count)
                 .subscribeOn(Schedulers.io())
                 .doFinally(() -> {
@@ -98,6 +90,7 @@ public class ImagePresenter extends BasePresenter<ImageContract.Model, ImageCont
                     }
                 }).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
                 .subscribe(imageTagsEntity -> {
                     if ("SUCCESS".equals(imageTagsEntity.getResult())) {
                         ImageTagsEntity.DataBean data = imageTagsEntity.getData();

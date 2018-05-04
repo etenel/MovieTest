@@ -6,28 +6,50 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jess.arms.base.BaseFragment;
-import com.jess.arms.di.component.AppComponent;
-import com.jess.arms.utils.ArmsUtils;
-
+import com.blankj.utilcode.util.LogUtils;
+import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.di.component.DaggerTagImageComponent;
 import com.eternel.wlsmv.di.module.TagImageModule;
 import com.eternel.wlsmv.mvp.contract.TagImageContract;
 import com.eternel.wlsmv.mvp.presenter.TagImagePresenter;
+import com.eternel.wlsmv.mvp.ui.adapter.TagImageListAdapter;
+import com.jess.arms.base.BaseFragment;
+import com.jess.arms.di.component.AppComponent;
+import com.jess.arms.utils.ArmsUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import com.eternel.wlsmv.R;
+import javax.inject.Inject;
+
+import butterknife.BindView;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class TagImageFragment extends BaseFragment<TagImagePresenter> implements TagImageContract.View {
+    @BindView(R.id.rl_image_list)
+    RecyclerView rlImageList;
+    @BindView(R.id.refresh)
+    SmartRefreshLayout refresh;
+    @Inject
+    TagImageListAdapter imageListAdapter;
+    private String order;
+    private String tag;
 
-    public static TagImageFragment newInstance() {
+    public static TagImageFragment newInstance(String tag,String order) {
         TagImageFragment fragment = new TagImageFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("tag",tag);
+        bundle.putString("order",order);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -48,6 +70,28 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        tag=arguments.getString("tag");
+        order=arguments.getString("order");
+        setRecycleView();
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mPresenter.getDatas(true);
+            }
+        });
+        refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                mPresenter.getDatas(false);
+            }
+        });
+        mPresenter.getDatas(true);
+    }
+
+    private void setRecycleView() {
+        rlImageList.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        rlImageList.setAdapter(imageListAdapter);
 
     }
 
@@ -99,7 +143,7 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
 
     @Override
     public void hideLoading() {
-
+        refresh.finishRefresh();
     }
 
     @Override
@@ -118,4 +162,18 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
     public void killMyself() {
 
     }
+    @Override
+    public void endLoadMore() {
+        refresh.finishLoadMore();
+    }
+    @Override
+    public String getTagName() {
+        return tag;
+    }
+
+    @Override
+    public String getOrder() {
+        return order;
+    }
+
 }

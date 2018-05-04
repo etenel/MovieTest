@@ -1,5 +1,7 @@
 package com.eternel.wlsmv.di.module;
 
+import com.eternel.wlsmv.R;
+import com.eternel.wlsmv.mvp.ui.adapter.TagImageListAdapter;
 import com.jess.arms.di.scope.FragmentScope;
 
 import dagger.Module;
@@ -32,5 +34,10 @@ public class TagImageModule {
     @Provides
     TagImageContract.Model provideTagImageModel(TagImageModel model) {
         return model;
+    }
+    @FragmentScope
+    @Provides
+    TagImageListAdapter provideTagImageListAdapter(){
+        return new TagImageListAdapter(R.layout.item_tag_list);
     }
 }

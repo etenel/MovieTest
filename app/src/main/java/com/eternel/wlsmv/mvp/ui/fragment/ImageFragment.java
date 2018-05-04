@@ -20,6 +20,7 @@ import com.eternel.wlsmv.di.component.DaggerImageComponent;
 import com.eternel.wlsmv.di.module.ImageModule;
 import com.eternel.wlsmv.mvp.contract.ImageContract;
 import com.eternel.wlsmv.mvp.presenter.ImagePresenter;
+import com.eternel.wlsmv.mvp.ui.activity.TagDetailActivity;
 import com.eternel.wlsmv.mvp.ui.adapter.ImageListAdapter;
 import com.eternel.wlsmv.mvp.ui.widget.GridDecoration;
 import com.jess.arms.base.BaseFragment;
@@ -80,7 +81,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
                     case 0:
                         booleans[0] = true;
                         booleans[1] = true;
-                        booleans[2]=true;
+                        booleans[2] = true;
                         break;
                     case 1:
 
@@ -96,8 +97,15 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
             mPresenter.getTags(false);
         });
         imageListAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        imageListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getContext(), TagDetailActivity.class);
+                intent.putExtra("tag_name", imageListAdapter.getItem(position).getTag_name());
+                launchActivity(intent);
+            }
+        });
         mPresenter.getTags(true);
-        mPresenter.initListener();
     }
 
     /**

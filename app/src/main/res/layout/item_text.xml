@@ -7,11 +7,14 @@
     <ImageView
         android:layout_marginTop="@dimen/dp_10"
         android:id="@+id/title_image"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <TextView
         android:id="@+id/tv_title"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
