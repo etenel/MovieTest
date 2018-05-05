@@ -92,7 +92,12 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
                 return booleans;
             }
         });
-        refresh.setEnableRefresh(false);
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+           mPresenter.getTags(true);
+            }
+        });
         refresh.setOnLoadMoreListener(refreshLayout -> {
             mPresenter.getTags(false);
         });
@@ -105,7 +110,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
                 launchActivity(intent);
             }
         });
-        mPresenter.getTags(true);
+        refresh.autoRefresh();
     }
 
     /**

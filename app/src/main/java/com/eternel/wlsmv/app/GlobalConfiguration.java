@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentManager;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.eternel.wlsmv.BuildConfig;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.jess.arms.base.App;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.GlobalConfigModule;
@@ -60,6 +61,7 @@ public final class GlobalConfiguration implements ConfigModule {
             builder.printHttpLogLevel(RequestInterceptor.Level.NONE);
         }
         Utils.init(context);
+        Fresco.initialize(context);
         LogUtils.Config config = LogUtils.getConfig().setLogSwitch(BuildConfig.LOG_DEBUG)
                 .setConsoleSwitch(BuildConfig.LOG_DEBUG);
         builder.baseurl(Api.APP_DOMAIN)

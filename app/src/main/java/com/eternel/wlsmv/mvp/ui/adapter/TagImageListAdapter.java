@@ -1,17 +1,22 @@
 package com.eternel.wlsmv.mvp.ui.adapter;
 
+import android.view.View;
 import android.widget.ImageView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.imageloader.loader.ImageLoader;
+import com.eternel.wlsmv.mvp.model.api.Api;
 import com.eternel.wlsmv.mvp.model.entity.TagDetailListEntity;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,17 +53,26 @@ public class TagImageListAdapter extends BaseQuickAdapter<TagDetailListEntity.Po
         switch (types) {
             case 0:
                 helper.setText(R.id.tv_title, item.getTitle());
-                JSONObject jsonObject = new JSONObject((Map) item.getTitle_image());
-                try {
-                    String url = jsonObject.getString("url");
-                    ImageLoader.getInstance().loadImage(mContext, url, (ImageView) helper.getView(R.id.title_image));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    JSONObject jsonObject = (JSONObject) item.getTitle_image();
+//                    String url = jsonObject.getString("url");
+//                    ImageLoader.getInstance().loadImage(mContext, url, (ImageView) helper.getView(R.id.title_image));
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
                 break;
             case 1:
-                ImageLoader.getInstance().loadImage(mContext, item.getCover_image_src(),(ImageView)helper.getView(R.id.iv_image));
-
+//                https://photo.tuchong.com/ + user_id +/l/ + img_id+.webp
+                List<TagDetailListEntity.PostListBean.ImagesBean> images = item.getImages();
+                TagDetailListEntity.PostListBean.ImagesBean imagesBean = images.get(0);
+                float width = imagesBean.getWidth();
+                float height = imagesBean.getHeight();
+                ImageLoader.getInstance().loadImage(mContext, item.getCover_image_src(), (ImageView) helper.getView(R.id.iv_image));
+                SimpleDraweeView view = helper.getView(R.id.iv_image);
+                view.setImageURI(Api.APP_DOMAIN + imagesBean.getUser_id() + "/l/" + imagesBean.getImg_id() + ".webp");
+                float asr = width / height;
+                LogUtils.e(asr+"");
+                view.setAspectRatio(asr);
                 break;
         }
     }

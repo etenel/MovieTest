@@ -3,22 +3,27 @@ package com.eternel.wlsmv.mvp.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.Trace;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MediaController;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.di.component.DaggerTagImageComponent;
 import com.eternel.wlsmv.di.module.TagImageModule;
 import com.eternel.wlsmv.mvp.contract.TagImageContract;
 import com.eternel.wlsmv.mvp.presenter.TagImagePresenter;
 import com.eternel.wlsmv.mvp.ui.adapter.TagImageListAdapter;
+import com.eternel.wlsmv.mvp.ui.widget.GridDecoration;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -44,11 +49,11 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
     private String order;
     private String tag;
 
-    public static TagImageFragment newInstance(String tag,String order) {
+    public static TagImageFragment newInstance(String tag, String order) {
         TagImageFragment fragment = new TagImageFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("tag",tag);
-        bundle.putString("order",order);
+        Bundle bundle = new Bundle();
+        bundle.putString("tag", tag);
+        bundle.putString("order", order);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -71,8 +76,8 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        tag=arguments.getString("tag");
-        order=arguments.getString("order");
+        tag = arguments.getString("tag");
+        order = arguments.getString("order");
         setRecycleView();
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -86,11 +91,34 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
                 mPresenter.getDatas(false);
             }
         });
+        imageListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
+            }
+        });
         mPresenter.getDatas(true);
     }
 
     private void setRecycleView() {
-        rlImageList.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        rlImageList.setLayoutManager(new StaggeredGridLayoutManager(2, OrientationHelper.VERTICAL));
+        rlImageList.addItemDecoration(new GridDecoration(getContext(), 4, getContext().getResources().getColor(R.color.white)) {
+            @Override
+            public boolean[] getItemSidesIsHaveOffsets(int itemPosition) {
+                boolean[] booleans = new boolean[]{false, false, false, false};
+                switch (itemPosition % 2) {
+                    case 0:
+                        booleans[1] = true;
+                        booleans[2]=true;
+                        break;
+                        case 1:
+                            booleans[1]=true;
+                            break;
+                }
+                return booleans;
+
+            }
+        });
         rlImageList.setAdapter(imageListAdapter);
 
     }
@@ -162,10 +190,12 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
     public void killMyself() {
 
     }
+
     @Override
     public void endLoadMore() {
         refresh.finishLoadMore();
     }
+
     @Override
     public String getTagName() {
         return tag;

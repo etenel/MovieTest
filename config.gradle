@@ -18,7 +18,8 @@ ext {
             rxlifecycleSdkVersion   : "1.0",
             rxlifecycle2SdkVersion  : "2.2.1",
             espressoSdkVersion      : "3.0.1",
-            canarySdkVersion        : "1.5.4"
+            canarySdkVersion        : "1.5.4",
+            fresco                  : "1.9.0"
     ]
 
     dependencies = [
@@ -41,7 +42,10 @@ ext {
             "glide-compiler"               : "com.github.bumptech.glide:compiler:${version["glideSdkVersion"]}",
             "glide-loader-okhttp3"         : "com.github.bumptech.glide:okhttp3-integration:${version["glideSdkVersion"]}",
             "picasso"                      : "com.squareup.picasso:picasso:2.5.2",
-
+            "fresco"                       : "com.facebook.fresco:fresco:${version["fresco"]}",
+            "fresco:animated-gif"          : "com.facebook.fresco:animated-gif:${version["fresco"]}",
+            "fresco:animated-webp"         : "com.facebook.fresco:animated-webp:${version["fresco"]}",
+            "fresco:webpsupport"           : "com.facebook.fresco:webpsupport:${version["fresco"]}",
             //view
             "autolayout"                   : "com.zhy:autolayout:1.4.5",
             "butterknife"                  : "com.jakewharton:butterknife:${version["butterknifeSdkVersion"]}",
@@ -92,7 +96,7 @@ ext {
             "retrofit-url-manager"         : "me.jessyan:retrofit-url-manager:1.2.5",
             "lifecyclemodel"               : "me.jessyan:lifecyclemodel:1.0.1",
             "BaseRecyclerViewAdapterHelper": "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.38",
-            "utilcode"                     : "com.blankj:utilcode:1.14.1",
+            "utilcode"                     : "com.blankj:utilcode:1.14.3",
             //test
             "junit"                        : "junit:junit:4.12",
             "androidJUnitRunner"           : "android.support.test.runner.AndroidJUnitRunner",

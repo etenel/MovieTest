@@ -82,4 +82,8 @@ dependencies {
     implementation rootProject.ext.dependencies["glide-loader-okhttp3"]
     implementation rootProject.ext.dependencies["utilcode"]
     implementation rootProject.ext.dependencies["smartRefreshLayout"]
+    implementation rootProject.ext.dependencies["fresco"]
+    implementation rootProject.ext.dependencies["fresco:animated-gif"]
+    implementation rootProject.ext.dependencies["fresco:animated-webp"]
+    implementation rootProject.ext.dependencies["fresco:webpsupport"]
 }
