@@ -102,23 +102,6 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
 
     private void setRecycleView() {
         rlImageList.setLayoutManager(new StaggeredGridLayoutManager(2, OrientationHelper.VERTICAL));
-        rlImageList.addItemDecoration(new GridDecoration(getContext(), 4, getContext().getResources().getColor(R.color.white)) {
-            @Override
-            public boolean[] getItemSidesIsHaveOffsets(int itemPosition) {
-                boolean[] booleans = new boolean[]{false, false, false, false};
-                switch (itemPosition % 2) {
-                    case 0:
-                        booleans[1] = true;
-                        booleans[2]=true;
-                        break;
-                        case 1:
-                            booleans[1]=true;
-                            break;
-                }
-                return booleans;
-
-            }
-        });
         rlImageList.setAdapter(imageListAdapter);
 
     }

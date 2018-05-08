@@ -95,7 +95,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-           mPresenter.getTags(true);
+                mPresenter.getTags(true);
             }
         });
         refresh.setOnLoadMoreListener(refreshLayout -> {
@@ -151,7 +151,15 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
      */
     @Override
     public void setData(@Nullable Object data) {
-
+        if (data != null && data instanceof Message) {
+            switch (((Message) data).what) {
+                case 0:
+                    if (((Message) data).arg1 == 1) {
+                       refresh.autoRefresh();
+                    }
+                    break;
+            }
+        }
     }
 
     @Override

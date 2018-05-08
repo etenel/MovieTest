@@ -25,6 +25,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.eternel.wlsmv.BuildConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.jess.arms.base.App;
 import com.jess.arms.base.delegate.AppLifecycles;
 import com.jess.arms.di.module.GlobalConfigModule;
@@ -61,7 +62,10 @@ public final class GlobalConfiguration implements ConfigModule {
             builder.printHttpLogLevel(RequestInterceptor.Level.NONE);
         }
         Utils.init(context);
-        Fresco.initialize(context);
+        ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(context)
+                .setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(context, imagePipelineConfig);
         LogUtils.Config config = LogUtils.getConfig().setLogSwitch(BuildConfig.LOG_DEBUG)
                 .setConsoleSwitch(BuildConfig.LOG_DEBUG);
         builder.baseurl(Api.APP_DOMAIN)

@@ -1,5 +1,6 @@
 package com.eternel.wlsmv.mvp.ui.adapter;
 
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,6 +12,12 @@ import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.imageloader.loader.ImageLoader;
 import com.eternel.wlsmv.mvp.model.api.Api;
 import com.eternel.wlsmv.mvp.model.entity.TagDetailListEntity;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONException;
@@ -67,12 +74,17 @@ public class TagImageListAdapter extends BaseQuickAdapter<TagDetailListEntity.Po
                 TagDetailListEntity.PostListBean.ImagesBean imagesBean = images.get(0);
                 float width = imagesBean.getWidth();
                 float height = imagesBean.getHeight();
-                ImageLoader.getInstance().loadImage(mContext, item.getCover_image_src(), (ImageView) helper.getView(R.id.iv_image));
+                //  ImageLoader.getInstance().loadImage(mContext, item.getCover_image_src(), (ImageView) helper.getView(R.id.iv_image));
                 SimpleDraweeView view = helper.getView(R.id.iv_image);
-                view.setImageURI(Api.APP_DOMAIN + imagesBean.getUser_id() + "/l/" + imagesBean.getImg_id() + ".webp");
+                view.setImageURI(Api.APP_PHOTO + imagesBean.getUser_id() + "/l/" + imagesBean.getImg_id() + ".webp");
                 float asr = width / height;
-                LogUtils.e(asr+"");
                 view.setAspectRatio(asr);
+                GenericDraweeHierarchyBuilder builder =
+                        new GenericDraweeHierarchyBuilder(mContext.getResources());
+                GenericDraweeHierarchy hierarchy = builder
+                        .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)
+                        .build();
+                view.setHierarchy(hierarchy);
                 break;
         }
     }

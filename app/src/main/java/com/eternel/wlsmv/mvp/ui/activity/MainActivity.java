@@ -2,6 +2,7 @@ package com.eternel.wlsmv.mvp.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,6 +98,27 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         mTab.getTabAt(1).setIcon(R.drawable.hot_movie);
         mTab.getTabAt(2).setIcon(R.drawable.future_movie);
         mPager.setCurrentItem(0);
+        mTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    Message data = new Message();
+                    data.what = 0;
+                    data.arg1 = 1;
+                    imageFragment.setData(data);
+                }
+            }
+        });
     }
 
     @Override
