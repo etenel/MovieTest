@@ -71,20 +71,24 @@ public class TagImageListAdapter extends BaseQuickAdapter<TagDetailListEntity.Po
             case 1:
 //                https://photo.tuchong.com/ + user_id +/l/ + img_id+.webp
                 List<TagDetailListEntity.PostListBean.ImagesBean> images = item.getImages();
-                TagDetailListEntity.PostListBean.ImagesBean imagesBean = images.get(0);
-                float width = imagesBean.getWidth();
-                float height = imagesBean.getHeight();
-                //  ImageLoader.getInstance().loadImage(mContext, item.getCover_image_src(), (ImageView) helper.getView(R.id.iv_image));
-                SimpleDraweeView view = helper.getView(R.id.iv_image);
-                view.setImageURI(Api.APP_PHOTO + imagesBean.getUser_id() + "/l/" + imagesBean.getImg_id() + ".webp");
-                float asr = width / height;
-                view.setAspectRatio(asr);
-                GenericDraweeHierarchyBuilder builder =
-                        new GenericDraweeHierarchyBuilder(mContext.getResources());
-                GenericDraweeHierarchy hierarchy = builder
-                        .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)
-                        .build();
-                view.setHierarchy(hierarchy);
+                if (images != null && images.size() > 0) {
+                    TagDetailListEntity.PostListBean.ImagesBean imagesBean = images.get(0);
+                    float width = imagesBean.getWidth();
+                    float height = imagesBean.getHeight();
+                    //  ImageLoader.getInstance().loadImage(mContext, item.getCover_image_src(), (ImageView) helper.getView(R.id.iv_image));
+                    SimpleDraweeView view = helper.getView(R.id.iv_image);
+                    view.setImageURI(Api.APP_PHOTO + imagesBean.getUser_id() + "/l/" + imagesBean.getImg_id() + ".webp");
+                    float asr = width / height;
+                    view.setAspectRatio(asr);
+                    GenericDraweeHierarchyBuilder builder =
+                            new GenericDraweeHierarchyBuilder(mContext.getResources());
+                    GenericDraweeHierarchy hierarchy = builder
+                            .setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP)
+                            .build();
+                    view.setHierarchy(hierarchy);
+                    helper.setText(R.id.tv_count,images.size()+"");
+                }
+
                 break;
         }
     }

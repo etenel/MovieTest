@@ -44,7 +44,6 @@ public class TagDetailActivity extends BaseActivity<TagDetailPresenter> implemen
     private TagImageFragment HotFragment;
     private TagImageFragment NewFragment;
     private String tag_name;
-
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerTagDetailComponent //如找不到该类,请编译一下项目

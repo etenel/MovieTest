@@ -7,6 +7,7 @@ import dagger.Provides;
 
 import com.eternel.wlsmv.mvp.contract.MainContract;
 import com.eternel.wlsmv.mvp.model.MainModel;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 
 @Module
@@ -33,4 +34,5 @@ public class MainModule {
     MainContract.Model provideMainModel(MainModel model) {
         return model;
     }
+
 }

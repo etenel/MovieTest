@@ -6,21 +6,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/m_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/m_tab" />
 
-        <include layout="@layout/content_main" />
+    <android.support.design.widget.TabLayout
+        android:id="@+id/m_tab"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="#ffffff"
+        app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="#ff4200"
+        app:tabTextColor="#4200" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/m_tab"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="#ffffff"
-            app:tabIndicatorHeight="0dp"
-            app:tabSelectedTextColor="#ff4200"
-            app:tabTextColor="#4200" />
-    </android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fl_imagetag"
+        android:layout_alignParentEnd="true"
+        app:useCompatPadding="true"
+        app:backgroundTint="@color/rosybrown"
+        app:fabCustomSize="35dp"
+        app:elevation="3dp"
+        android:src="@drawable/image_tags"
+        android:layout_above="@+id/m_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

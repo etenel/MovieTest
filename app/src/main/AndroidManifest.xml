@@ -42,7 +42,18 @@
             android:name="com.eternel.wlsmv.app.GlobalConfiguration"
             android:value="ConfigModule" />
 
-        <activity android:name=".mvp.ui.activity.TagDetailActivity"></activity>
+        <activity android:name=".mvp.ui.activity.TagDetailActivity" />
+        <activity android:name=".mvp.ui.activity.PictureActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.eternel.wlsmv"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>
