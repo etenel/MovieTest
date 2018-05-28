@@ -6,25 +6,47 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.jess.arms.base.BaseFragment;
-import com.jess.arms.di.component.AppComponent;
-import com.jess.arms.utils.ArmsUtils;
-
+import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.di.component.DaggerCurrentMovieComponent;
 import com.eternel.wlsmv.di.module.CurrentMovieModule;
 import com.eternel.wlsmv.mvp.contract.CurrentMovieContract;
 import com.eternel.wlsmv.mvp.presenter.CurrentMoviePresenter;
+import com.eternel.wlsmv.mvp.ui.adapter.MovieListAdapter;
+import com.jess.arms.base.BaseFragment;
+import com.jess.arms.di.component.AppComponent;
+import com.jess.arms.utils.ArmsUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import com.eternel.wlsmv.R;
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class CurrentMovieFragment extends BaseFragment<CurrentMoviePresenter> implements CurrentMovieContract.View {
+
+    @BindView(R.id.rl_movies)
+    RecyclerView rlMovies;
+    @BindView(R.id.refresh)
+    SmartRefreshLayout refresh;
+
+    @Inject
+    MovieListAdapter movieListAdapter;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
     public static CurrentMovieFragment newInstance() {
         CurrentMovieFragment fragment = new CurrentMovieFragment();
@@ -48,7 +70,16 @@ public class CurrentMovieFragment extends BaseFragment<CurrentMoviePresenter> im
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-
+        rlMovies.setAdapter(movieListAdapter);
+        rlMovies.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mPresenter.getMovies(true);
+            }
+        });
+        refresh.setEnableLoadMore(false);
+        mPresenter.getMovies(true);
     }
 
     /**
@@ -89,7 +120,15 @@ public class CurrentMovieFragment extends BaseFragment<CurrentMoviePresenter> im
      */
     @Override
     public void setData(@Nullable Object data) {
-
+        if (data != null && data instanceof Message) {
+            switch (((Message) data).what) {
+                case 0:
+                    if (((Message) data).arg1 == 1) {
+                        refresh.autoRefresh();
+                    }
+                    break;
+            }
+        }
     }
 
     @Override
@@ -99,7 +138,9 @@ public class CurrentMovieFragment extends BaseFragment<CurrentMoviePresenter> im
 
     @Override
     public void hideLoading() {
-
+        if (refresh != null) {
+            refresh.finishRefresh();
+        }
     }
 
     @Override
@@ -118,4 +159,18 @@ public class CurrentMovieFragment extends BaseFragment<CurrentMoviePresenter> im
     public void killMyself() {
 
     }
+
+    public void setTitle(String title) {
+        checkNotNull(title);
+        tvTitle.setText(title);
+    }
+
+    @Override
+    public void hideLoadMore() {
+        if (refresh != null) {
+            refresh.finishLoadMore();
+        }
+    }
+
+
 }

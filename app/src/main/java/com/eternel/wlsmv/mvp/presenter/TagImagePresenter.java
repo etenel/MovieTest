@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.OnLifecycleEvent;
 
+import com.eternel.wlsmv.mvp.model.entity.TagDetailListEntity;
 import com.eternel.wlsmv.mvp.ui.adapter.TagImageListAdapter;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.FragmentScope;
@@ -13,6 +14,7 @@ import com.jess.arms.http.imageloader.ImageLoader;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
+import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 
 import javax.inject.Inject;
 
@@ -70,12 +72,17 @@ public class TagImagePresenter extends BasePresenter<TagImageContract.Model, Tag
                 }).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                .subscribe(tagDetailListEntity -> {
-                    if (refresh) {
-                        imageListAdapter.setNewData(tagDetailListEntity.getPostList());
-                    } else {
-                        imageListAdapter.addData(tagDetailListEntity.getPostList());
+                .subscribe(new ErrorHandleSubscriber<TagDetailListEntity>(mErrorHandler) {
+                    @Override
+                    public void onNext(TagDetailListEntity tagDetailListEntity) {
+                        if (refresh) {
+                            imageListAdapter.setNewData(tagDetailListEntity.getPostList());
+                        } else {
+                            imageListAdapter.addData(tagDetailListEntity.getPostList());
+                        }
                     }
                 });
+
+
     }
 }

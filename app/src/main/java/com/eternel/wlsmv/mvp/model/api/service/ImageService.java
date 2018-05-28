@@ -1,11 +1,13 @@
 package com.eternel.wlsmv.mvp.model.api.service;
 
+import com.eternel.wlsmv.mvp.model.api.Api;
 import com.eternel.wlsmv.mvp.model.entity.ImageEntity;
 import com.eternel.wlsmv.mvp.model.entity.ImageTagsEntity;
 import com.eternel.wlsmv.mvp.model.entity.TagDetailListEntity;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 

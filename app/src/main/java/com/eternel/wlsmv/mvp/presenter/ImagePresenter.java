@@ -91,20 +91,23 @@ public class ImagePresenter extends BasePresenter<ImageContract.Model, ImageCont
                 }).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                .subscribe(imageTagsEntity -> {
-                    if ("SUCCESS".equals(imageTagsEntity.getResult())) {
-                        ImageTagsEntity.DataBean data = imageTagsEntity.getData();
-                        List<ImageTagsEntity.DataBean.TagListBean> tag_list = data.getTag_list();
-                        if (refresh) {
-                            imageListAdapter.setNewData(tag_list);
+                .subscribe(new ErrorHandleSubscriber<ImageTagsEntity>(mErrorHandler) {
+                    @Override
+                    public void onNext(ImageTagsEntity imageTagsEntity) {
+                        if ("SUCCESS".equals(imageTagsEntity.getResult())) {
+                            ImageTagsEntity.DataBean data = imageTagsEntity.getData();
+                            List<ImageTagsEntity.DataBean.TagListBean> tag_list = data.getTag_list();
+                            if (refresh) {
+                                imageListAdapter.setNewData(tag_list);
+                            } else {
+                                imageListAdapter.addData(tag_list);
+                            }
                         } else {
-                            imageListAdapter.addData(tag_list);
+                            ToastUtils.showShort(imageTagsEntity.getResult() + imageTagsEntity.getMessage());
                         }
-                    } else {
-                        ToastUtils.showShort(imageTagsEntity.getResult() + imageTagsEntity.getMessage());
                     }
-
                 });
+
 
 
     }

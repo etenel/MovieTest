@@ -1,5 +1,8 @@
 package com.eternel.wlsmv.di.module;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.eternel.wlsmv.R;
+import com.eternel.wlsmv.mvp.ui.adapter.MovieListAdapter;
 import com.jess.arms.di.scope.ActivityScope;
 
 import dagger.Module;
@@ -32,5 +35,13 @@ public class CurrentMovieModule {
     @Provides
     CurrentMovieContract.Model provideCurrentMovieModel(CurrentMovieModel model) {
         return model;
+    }
+
+    @ActivityScope
+    @Provides
+    MovieListAdapter provideMovieListAdapter() {
+        MovieListAdapter movieListAdapter = new MovieListAdapter(R.layout.item_movie);
+        movieListAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        return movieListAdapter;
     }
 }

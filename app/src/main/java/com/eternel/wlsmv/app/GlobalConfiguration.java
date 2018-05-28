@@ -28,6 +28,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.jess.arms.base.App;
 import com.jess.arms.base.delegate.AppLifecycles;
+import com.jess.arms.di.module.ClientModule;
 import com.jess.arms.di.module.GlobalConfigModule;
 import com.jess.arms.http.log.RequestInterceptor;
 import com.jess.arms.integration.ConfigModule;
@@ -39,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.jessyan.progressmanager.ProgressManager;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
+import okhttp3.OkHttpClient;
 
 /**
  * ================================================

@@ -53,13 +53,12 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
         if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
             try {
                 Timber.w(httpResult);
-                ImageEntity movie = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<ImageEntity>() {}.getType());
-              if("SUCCESS".equals(movie.getResult())) {
-
-              }else{
-                  Timber.w("Result ------> " +"请求失败");
-              }
-                Timber.w("Result ------> " + movie.getResult() + "    ||   Avatar_url------> " + movie.getMessage());
+//                ImageEntity movie = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<ImageEntity>() {}.getType());
+//              if("SUCCESS".equals(movie.getResult())) {
+//
+//              }else{
+//                  Timber.w("Result ------> " +"请求失败");
+//              }
             } catch (Exception e) {
                 e.printStackTrace();
                 return response;

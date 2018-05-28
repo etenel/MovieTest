@@ -111,11 +111,25 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                Message data = new Message();
+
+                switch (tab.getPosition()) {
+                    case 0:
+                        data.what = 0;
+                        data.arg1 = 1;
+                        imageFragment.setData(data);
+                        break;
+                    case 1:
+                        data.what = 0;
+                        data.arg1 = 1;
+                        currentMovieFragment.setData(data);
+                        break;
+                    case 2:
+
+                        break;
+                }
                 if (tab.getPosition() == 0) {
-                    Message data = new Message();
-                    data.what = 0;
-                    data.arg1 = 1;
-                    imageFragment.setData(data);
+
                 }
             }
         });
