@@ -43,9 +43,23 @@ public class ImageListAdapter extends BaseQuickAdapter<ImageTagsEntity.DataBean.
         //        https://photo.tuchong.com/ + user_id +/l/ + img_id+.webp
         helper.setText(R.id.tv_tags, item.getTag_name());
         List<ImageTagsEntity.DataBean.TagListBean.PostListBean> postList = item.getPostList();
-        if(postList.size()>0) {
-            ImageTagsEntity.DataBean.TagListBean.PostListBean.CoverImageBean.SourceBean source = postList.get(0).getCover_image().getSource();
-            ImageLoader.getInstance().loadImage(mContext, source.getG(),(ImageView)helper.getView(R.id.iv_image));
+        if (postList != null && postList.size() > 0) {
+            ImageTagsEntity.DataBean.TagListBean.PostListBean.CoverImageBean.SourceBean source;
+            switch (postList.size()) {
+                case 2:
+                    source = postList.get(1).getCover_image().getSource();
+                    ImageLoader.getInstance().loadImage(mContext, source.getG(), (ImageView) helper.getView(R.id.iv_image));
+                    break;
+                case 3:
+                    source = postList.get(1).getCover_image().getSource();
+                    ImageLoader.getInstance().loadImage(mContext, source.getG(), (ImageView) helper.getView(R.id.iv_image));
+                    break;
+                default:
+                    source = postList.get(0).getCover_image().getSource();
+                    ImageLoader.getInstance().loadImage(mContext, source.getG(), (ImageView) helper.getView(R.id.iv_image));
+                    break;
+            }
         }
+
     }
 }

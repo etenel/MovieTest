@@ -1,11 +1,7 @@
 package com.eternel.wlsmv.mvp.presenter;
 
 import android.app.Application;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.OnLifecycleEvent;
 
-import com.blankj.utilcode.constant.PermissionConstants;
-import com.blankj.utilcode.util.PermissionUtils;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.mvp.BasePresenter;
@@ -15,12 +11,11 @@ import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 
 import javax.inject.Inject;
 
-import com.eternel.wlsmv.mvp.contract.MainContract;
-import com.jess.arms.utils.PermissionUtil;
+import com.eternel.wlsmv.mvp.contract.PictureContract;
 
 
 @ActivityScope
-public class MainPresenter extends BasePresenter<MainContract.Model, MainContract.View> {
+public class PicturePresenter extends BasePresenter<PictureContract.Model, PictureContract.View> {
     @Inject
     RxErrorHandler mErrorHandler;
     @Inject
@@ -31,11 +26,9 @@ public class MainPresenter extends BasePresenter<MainContract.Model, MainContrac
     AppManager mAppManager;
 
     @Inject
-    public MainPresenter(MainContract.Model model, MainContract.View rootView) {
+    public PicturePresenter(PictureContract.Model model, PictureContract.View rootView) {
         super(model, rootView);
     }
-
-
 
     @Override
     public void onDestroy() {

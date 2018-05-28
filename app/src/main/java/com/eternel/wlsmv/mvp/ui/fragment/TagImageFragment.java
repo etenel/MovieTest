@@ -1,6 +1,7 @@
 package com.eternel.wlsmv.mvp.ui.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Trace;
@@ -22,6 +23,7 @@ import com.eternel.wlsmv.di.component.DaggerTagImageComponent;
 import com.eternel.wlsmv.di.module.TagImageModule;
 import com.eternel.wlsmv.mvp.contract.TagImageContract;
 import com.eternel.wlsmv.mvp.presenter.TagImagePresenter;
+import com.eternel.wlsmv.mvp.ui.activity.PictureActivity;
 import com.eternel.wlsmv.mvp.ui.adapter.TagImageListAdapter;
 import com.eternel.wlsmv.mvp.ui.widget.GridDecoration;
 import com.jess.arms.base.BaseFragment;
@@ -91,10 +93,22 @@ public class TagImageFragment extends BaseFragment<TagImagePresenter> implements
                 mPresenter.getDatas(false);
             }
         });
-        imageListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        imageListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (imageListAdapter.getItem(position).getType()) {
+                    case "text":
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(imageListAdapter.getItem(position).getUrl()));
+                        startActivity(intent);
+                        break;
+                    case "multi-photo":
+                        Intent intent1 = new Intent(getContext(), PictureActivity.class);
+                        intent1.putExtra("image",imageListAdapter.getItem(position));
+                        startActivity(intent1);
+                        break;
+                    default:
+                }
             }
         });
         mPresenter.getDatas(true);

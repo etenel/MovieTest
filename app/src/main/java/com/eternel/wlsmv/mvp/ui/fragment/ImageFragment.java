@@ -26,7 +26,6 @@ import com.eternel.wlsmv.mvp.ui.widget.GridDecoration;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
-import com.paginate.Paginate;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -47,6 +46,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
     SmartRefreshLayout refresh;
     @Inject
     ImageListAdapter imageListAdapter;
+    private boolean isrefreshing;
 
     public static ImageFragment newInstance() {
         ImageFragment fragment = new ImageFragment();
@@ -95,6 +95,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                isrefreshing = true;
                 mPresenter.getTags(true);
             }
         });
@@ -105,9 +106,11 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
         imageListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getContext(), TagDetailActivity.class);
-                intent.putExtra("tag_name", imageListAdapter.getItem(position).getTag_name());
-                launchActivity(intent);
+                if (!isrefreshing) {
+                    Intent intent = new Intent(getContext(), TagDetailActivity.class);
+                    intent.putExtra("tag_name", imageListAdapter.getItem(position).getTag_name());
+                    launchActivity(intent);
+                }
             }
         });
         refresh.autoRefresh();
@@ -155,7 +158,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
             switch (((Message) data).what) {
                 case 0:
                     if (((Message) data).arg1 == 1) {
-                       refresh.autoRefresh();
+                        refresh.autoRefresh();
                     }
                     break;
             }
@@ -170,6 +173,7 @@ public class ImageFragment extends BaseFragment<ImagePresenter> implements Image
     @Override
     public void hideLoading() {
         refresh.finishRefresh();
+        isrefreshing = false;
     }
 
     @Override
