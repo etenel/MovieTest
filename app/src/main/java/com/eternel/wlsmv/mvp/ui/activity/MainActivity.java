@@ -1,6 +1,7 @@
 package com.eternel.wlsmv.mvp.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -74,6 +75,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         return R.layout.activity_main; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 

@@ -179,7 +179,7 @@ public class PictureActivity extends BaseActivity<PicturePresenter> implements P
     private void notifySystemGallery(File file) {
         Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = FileProvider.getUriForFile(getApplicationContext(), "com.eternel.wlsmv", file);
+            uri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.authority), file);
         } else {
             uri = Uri.fromFile(file);
         }

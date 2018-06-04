@@ -3,6 +3,8 @@ package com.eternel.wlsmv.mvp.presenter;
 import android.app.Application;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.eternel.wlsmv.constant.DouBanConstant;
 import com.eternel.wlsmv.mvp.model.entity.MoviesEntity;
 import com.eternel.wlsmv.mvp.ui.adapter.MovieListAdapter;
 import com.jess.arms.integration.AppManager;
@@ -36,10 +38,7 @@ public class CurrentMoviePresenter extends BasePresenter<CurrentMovieContract.Mo
     @Inject
     MovieListAdapter movieListAdapter;
     private int start = 0;
-    private int count = 100;
-    private String apikey = "0b2bdeda43b5688921839c8ecb20399b";
-    private String client = "message";
-    private String udid = "sffdaetgreytadvhdy";
+
 
     @Inject
     public CurrentMoviePresenter(CurrentMovieContract.Model model, CurrentMovieContract.View rootView) {
@@ -53,8 +52,8 @@ public class CurrentMoviePresenter extends BasePresenter<CurrentMovieContract.Mo
         } else {
             start++;
         }
-       LogUtils.e(start+"");
-        mModel.getMovies(apikey, "北京", start, count, udid, client)
+        String city = SPUtils.getInstance().getString("city", "北京");
+        mModel.getMovies(DouBanConstant.apikey, city, start, DouBanConstant.count, DouBanConstant.udid, DouBanConstant.client)
                 .subscribeOn(Schedulers.io())
                 .doFinally(() -> {
                     if (refresh) {
@@ -71,9 +70,9 @@ public class CurrentMoviePresenter extends BasePresenter<CurrentMovieContract.Mo
                     public void onNext(MoviesEntity moviesEntity) {
                         List<MoviesEntity.SubjectsBean> subjects = moviesEntity.getSubjects();
                         mRootView.setTitle(moviesEntity.getTitle());
-                        if(refresh) {
+                        if (refresh) {
                             movieListAdapter.setNewData(subjects);
-                        }else{
+                        } else {
                             movieListAdapter.addData(subjects);
                         }
                     }
@@ -88,6 +87,6 @@ public class CurrentMoviePresenter extends BasePresenter<CurrentMovieContract.Mo
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
-        this.movieListAdapter=null;
+        this.movieListAdapter = null;
     }
 }

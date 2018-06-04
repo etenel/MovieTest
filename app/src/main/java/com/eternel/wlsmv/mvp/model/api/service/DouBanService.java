@@ -2,11 +2,13 @@ package com.eternel.wlsmv.mvp.model.api.service;
 
 import com.eternel.wlsmv.mvp.model.api.Api;
 import com.eternel.wlsmv.mvp.model.entity.ImageEntity;
+import com.eternel.wlsmv.mvp.model.entity.MovieDetailEntity;
 import com.eternel.wlsmv.mvp.model.entity.MoviesEntity;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import static com.eternel.wlsmv.mvp.model.api.Api.DOUBAN_DOMAIN_NAME;
@@ -29,5 +31,10 @@ public interface DouBanService {
     @GET("v2/movie/in_theaters")
     Observable<MoviesEntity> getMovies(@Query("apikey") String apikey, @Query("city") String city,
                                        @Query("start") int start, @Query("count") int count, @Query("udid") String udid, @Query("client") String client);
+
+    @Headers(DOMAIN_NAME_HEADER+ DOUBAN_DOMAIN_NAME)
+    @GET("v2/movie/subject/{id}")
+    Observable<MovieDetailEntity> getMovieDetail(@Path("id")String id, @Query("apikey") String apikey, @Query("city") String city,
+                                                 @Query("udid") String udid, @Query("client") String client);
 
 }

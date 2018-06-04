@@ -18,6 +18,7 @@ package com.eternel.wlsmv.app;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.eternel.wlsmv.mvp.model.entity.ImageEntity;
 import com.google.gson.reflect.TypeToken;
 import com.jess.arms.http.GlobalHttpHandler;
@@ -52,7 +53,7 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
 
         if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
             try {
-                Timber.w(httpResult);
+                LogUtils.w(httpResult);
 //                ImageEntity movie = ArmsUtils.obtainAppComponentFromContext(context).gson().fromJson(httpResult, new TypeToken<ImageEntity>() {}.getType());
 //              if("SUCCESS".equals(movie.getResult())) {
 //

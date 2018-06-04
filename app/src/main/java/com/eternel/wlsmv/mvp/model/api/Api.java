@@ -28,6 +28,10 @@ public interface Api {
     String APP_DOMAIN = "https://tuchong.com/";
     String APP_PHOTO = "https://photo.tuchong.com/";
     String RequestSuccess = "SUCCESS";
+
     String APP_DOUBAN_DOMAIN = "https://api.douban.com/";
     String DOUBAN_DOMAIN_NAME = "douban";
+
+    String TencentFaceRecognition = "https://api.ai.qq.com/";
+    String Tencent="tencent";
 }

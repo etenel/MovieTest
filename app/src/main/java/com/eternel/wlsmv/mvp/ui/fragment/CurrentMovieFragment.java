@@ -13,15 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.di.component.DaggerCurrentMovieComponent;
 import com.eternel.wlsmv.di.module.CurrentMovieModule;
 import com.eternel.wlsmv.mvp.contract.CurrentMovieContract;
 import com.eternel.wlsmv.mvp.presenter.CurrentMoviePresenter;
+import com.eternel.wlsmv.mvp.ui.activity.MovieDetailActivity;
 import com.eternel.wlsmv.mvp.ui.adapter.MovieListAdapter;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+import com.qmuiteam.qmui.widget.QMUIAnimationListView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -80,6 +83,14 @@ public class CurrentMovieFragment extends BaseFragment<CurrentMoviePresenter> im
         });
         refresh.setEnableLoadMore(false);
         mPresenter.getMovies(true);
+        movieListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+               Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+               intent.putExtra("id",movieListAdapter.getItem(position).getId());
+               startActivity(intent);
+            }
+        });
     }
 
     /**

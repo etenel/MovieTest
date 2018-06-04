@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.eternel.wlsmv.R;
+import com.jess.arms.http.imageloader.glide.GlideArms;
 
 import timber.log.Timber;
 
@@ -86,6 +87,7 @@ public class ActivityLifecycleCallbacksImpl implements Application.ActivityLifec
     @Override
     public void onActivityStopped(Activity activity) {
         Timber.w(activity + " - onActivityStopped");
+        GlideArms.with(activity).pauseRequests();
     }
 
     @Override

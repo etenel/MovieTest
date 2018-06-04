@@ -11,7 +11,6 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.eternel.wlsmv.R;
-import com.eternel.wlsmv.app.utils.RxUtils;
 import com.eternel.wlsmv.mvp.model.entity.ImageEntity;
 import com.eternel.wlsmv.mvp.model.entity.ImageTagsEntity;
 import com.eternel.wlsmv.mvp.ui.activity.TagDetailActivity;

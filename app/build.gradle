@@ -57,8 +57,9 @@ dependencies {
     implementation(rootProject.ext.dependencies["cardview-v7"]) {
         exclude module: 'support-annotations'
     }
-    implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor rootProject.ext.dependencies["appcompat-v7"]
+    implementation rootProject.ext.dependencies["support-v4"]
+    implementation rootProject.ext.dependencies["exifinterface"]
     annotationProcessor rootProject.ext.dependencies["design"]
     //tools
     annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
@@ -87,5 +88,7 @@ dependencies {
     implementation rootProject.ext.dependencies["fresco:animated-gif"]
     implementation rootProject.ext.dependencies["fresco:animated-webp"]
     implementation rootProject.ext.dependencies["fresco:webpsupport"]
-    implementation 'com.qmuiteam:qmui:1.1.2'
+    implementation rootProject.ext.dependencies["luban"]
+    implementation rootProject.ext.dependencies["qmui"]
+
 }

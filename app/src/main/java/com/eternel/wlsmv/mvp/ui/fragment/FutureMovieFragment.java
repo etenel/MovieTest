@@ -1,30 +1,62 @@
 package com.eternel.wlsmv.mvp.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
-import com.jess.arms.base.BaseFragment;
-import com.jess.arms.di.component.AppComponent;
-import com.jess.arms.utils.ArmsUtils;
-
+import com.blankj.utilcode.util.LogUtils;
+import com.eternel.wlsmv.R;
 import com.eternel.wlsmv.di.component.DaggerFutureMovieComponent;
 import com.eternel.wlsmv.di.module.FutureMovieModule;
 import com.eternel.wlsmv.mvp.contract.FutureMovieContract;
+import com.eternel.wlsmv.mvp.model.api.Api;
 import com.eternel.wlsmv.mvp.presenter.FutureMoviePresenter;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.jess.arms.base.BaseFragment;
+import com.jess.arms.di.component.AppComponent;
+import com.jess.arms.http.imageloader.glide.GlideArms;
+import com.jess.arms.utils.ArmsUtils;
 
-import com.eternel.wlsmv.R;
+import java.io.File;
+import java.net.URL;
+import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import uk.co.senab.photoview.PhotoView;
+
+import static android.app.Activity.RESULT_OK;
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 public class FutureMovieFragment extends BaseFragment<FutureMoviePresenter> implements FutureMovieContract.View {
+
+    @BindView(R.id.sd_view)
+    PhotoView sdView;
+    @BindView(R.id.bt_image)
+    Button btImage;
+    @BindView(R.id.bt_photo)
+    Button btPhoto;
+    @BindView(R.id.rl_progress)
+    RelativeLayout rlProgress;
 
     public static FutureMovieFragment newInstance() {
         FutureMovieFragment fragment = new FutureMovieFragment();
@@ -94,12 +126,12 @@ public class FutureMovieFragment extends BaseFragment<FutureMoviePresenter> impl
 
     @Override
     public void showLoading() {
-
+        rlProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        rlProgress.setVisibility(View.GONE);
     }
 
     @Override
@@ -111,11 +143,54 @@ public class FutureMovieFragment extends BaseFragment<FutureMoviePresenter> impl
     @Override
     public void launchActivity(@NonNull Intent intent) {
         checkNotNull(intent);
-        ArmsUtils.startActivity(intent);
+//        ArmsUtils.startActivity(intent);
+        startActivityForResult(intent, 300);
     }
+
 
     @Override
     public void killMyself() {
 
+    }
+
+
+    @OnClick(R.id.bt_image)
+    public void onBtImageClicked() {
+       mPresenter.openGallery();
+    }
+
+    @OnClick(R.id.bt_photo)
+    public void onBtPhotoClicked() {
+        mPresenter.openCamera();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogUtils.e(data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 200:
+                    Uri image = data.getData();
+                    mPresenter.addImage(image);
+                    break;
+                case 300:
+                    Uri photo= Uri.parse("sss");
+                    mPresenter.addImage(photo);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void loadImage(File file) {
+        LogUtils.e(file.getPath());
+        GlideArms.with(sdView.getContext()).load(file).into(sdView);
+    }
+
+    @Override
+    public void launchActivityForResult(Intent intent, int requestCode) {
+        checkNotNull(intent);
+        startActivityForResult(intent,requestCode);
     }
 }
