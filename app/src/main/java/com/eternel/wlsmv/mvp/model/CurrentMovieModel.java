@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.eternel.wlsmv.mvp.model.api.Api;
 import com.eternel.wlsmv.mvp.model.api.service.DouBanService;
+import com.eternel.wlsmv.mvp.model.entity.BaseJson;
 import com.eternel.wlsmv.mvp.model.entity.MoviesEntity;
 import com.google.gson.Gson;
 import com.jess.arms.integration.IRepositoryManager;
@@ -44,4 +45,12 @@ public class CurrentMovieModel extends BaseModel implements CurrentMovieContract
         return mRepositoryManager.obtainRetrofitService(DouBanService.class)
                 .getMovies(apikey, city, start, count, udid, client);
     }
+
+    @Override
+    public Observable<BaseJson> getdata() {
+        RetrofitUrlManager.getInstance().putDomain(Api.t, Api.test);
+        return mRepositoryManager.obtainRetrofitService(DouBanService.class)
+                .getdata();
+    }
+
 }

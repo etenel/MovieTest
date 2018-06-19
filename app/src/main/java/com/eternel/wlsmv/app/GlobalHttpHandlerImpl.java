@@ -50,7 +50,7 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
     public Response onHttpResultResponse(String httpResult, Interceptor.Chain chain, Response response) {
                     /* 这里可以先客户端一步拿到每一次http请求的结果,可以解析成json,做一些操作,如检测到token过期后
                        重新请求token,并重新执行请求 */
-
+        LogUtils.w(httpResult+response);
         if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
             try {
                 LogUtils.w(httpResult);
@@ -87,6 +87,9 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
                     /* 如果需要再请求服务器之前做一些操作,则重新返回一个做过操作的的request如增加header,不做操作则直接返回request参数
                        return chain.request().newBuilder().header("token", tokenId)
                               .build(); */
-        return request;
+
+        return chain.request().newBuilder().header("Content-Type","application/json")
+                .header("username","10062")
+                .header("password","10062").build();
     }
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.eternel.wlsmv.constant.DouBanConstant;
+import com.eternel.wlsmv.mvp.model.entity.BaseJson;
 import com.eternel.wlsmv.mvp.model.entity.MoviesEntity;
 import com.eternel.wlsmv.mvp.ui.adapter.MovieListAdapter;
 import com.jess.arms.integration.AppManager;
@@ -47,36 +48,44 @@ public class CurrentMoviePresenter extends BasePresenter<CurrentMovieContract.Mo
     }
 
     public void getMovies(boolean refresh) {
+        mModel.getdata().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ErrorHandleSubscriber<BaseJson>(mErrorHandler) {
+                    @Override
+                    public void onNext(BaseJson baseJson) {
+
+                    }
+                });
         if (refresh) {
             start = 0;
         } else {
             start++;
         }
         String city = SPUtils.getInstance().getString("city", "北京");
-        mModel.getMovies(DouBanConstant.apikey, city, start, DouBanConstant.count, DouBanConstant.udid, DouBanConstant.client)
-                .subscribeOn(Schedulers.io())
-                .doFinally(() -> {
-                    if (refresh) {
-                        mRootView.hideLoading();
-                    } else {
-                        mRootView.hideLoadMore();
-
-                    }
-                }).subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                .subscribe(new ErrorHandleSubscriber<MoviesEntity>(mErrorHandler) {
-                    @Override
-                    public void onNext(MoviesEntity moviesEntity) {
-                        List<MoviesEntity.SubjectsBean> subjects = moviesEntity.getSubjects();
-                        mRootView.setTitle(moviesEntity.getTitle());
-                        if (refresh) {
-                            movieListAdapter.setNewData(subjects);
-                        } else {
-                            movieListAdapter.addData(subjects);
-                        }
-                    }
-                });
+//        mModel.getMovies(DouBanConstant.apikey, city, start, DouBanConstant.count, DouBanConstant.udid, DouBanConstant.client)
+//                .subscribeOn(Schedulers.io())
+//                .doFinally(() -> {
+//                    if (refresh) {
+//                        mRootView.hideLoading();
+//                    } else {
+//                        mRootView.hideLoadMore();
+//
+//                    }
+//                }).subscribeOn(AndroidSchedulers.mainThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+//                .subscribe(new ErrorHandleSubscriber<MoviesEntity>(mErrorHandler) {
+//                    @Override
+//                    public void onNext(MoviesEntity moviesEntity) {
+//                        List<MoviesEntity.SubjectsBean> subjects = moviesEntity.getSubjects();
+//                        mRootView.setTitle(moviesEntity.getTitle());
+//                        if (refresh) {
+//                            movieListAdapter.setNewData(subjects);
+//                        } else {
+//                            movieListAdapter.addData(subjects);
+//                        }
+//                    }
+//                });
 
     }
 

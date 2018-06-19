@@ -1,5 +1,6 @@
 package com.eternel.wlsmv.mvp.contract;
 
+import com.eternel.wlsmv.mvp.model.entity.BaseJson;
 import com.eternel.wlsmv.mvp.model.entity.MoviesEntity;
 import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
@@ -19,5 +20,6 @@ public interface CurrentMovieContract {
     interface Model extends IModel {
         Observable<MoviesEntity> getMovies(String apikey, String city,
                                            int start, int count, String udid, String client);
+        Observable<BaseJson> getdata();
     }
 }

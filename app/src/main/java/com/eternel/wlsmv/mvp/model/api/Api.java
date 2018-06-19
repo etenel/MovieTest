@@ -34,4 +34,6 @@ public interface Api {
 
     String TencentFaceRecognition = "https://api.ai.qq.com/";
     String Tencent="tencent";
+    String test="http://121.42.28.148:8888/services/";
+    String t="test";
 }
